@@ -82,7 +82,7 @@ class _CardSkeleton extends StatelessWidget {
       ),
       decoration: BoxDecoration(
         color: themeData.backgroundColor ?? colorScheme.surface,
-        borderRadius: themeData.borderRadius ?? BorderRadius.circular(12.0),
+        borderRadius: themeData.borderRadius ?? BorderRadius.circular(12),
         border: Border.all(
           color: colorScheme.outline.addOpacity(0.2),
         ),
@@ -97,20 +97,20 @@ class _CardSkeleton extends StatelessWidget {
               width: double.infinity,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.only(
-                  topLeft: (themeData.borderRadius
+                  topLeft: themeData.borderRadius
                           ?.resolve(context.directionality)
                           .topLeft ??
-                      const Radius.circular(12.0)),
-                  topRight: (themeData.borderRadius
+                      const Radius.circular(12),
+                  topRight: themeData.borderRadius
                           ?.resolve(context.directionality)
                           .topRight ??
-                      const Radius.circular(12.0)),
+                      const Radius.circular(12),
                 ),
                 color: _shimmerColor(colorScheme),
               ),
             ),
           Padding(
-            padding: themeData.contentPadding ?? const EdgeInsets.all(12.0),
+            padding: themeData.contentPadding ?? const EdgeInsets.all(12),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -118,42 +118,42 @@ class _CardSkeleton extends StatelessWidget {
                 _SkeletonBox(
                   animate: animate,
                   width: double.infinity,
-                  height: 16.0,
-                  borderRadius: BorderRadius.circular(4.0),
+                  height: 16,
+                  borderRadius: BorderRadius.circular(4),
                 ),
-                const SizedBox(height: 8.0),
+                const SizedBox(height: 8),
 
                 // Description skeleton
                 _SkeletonBox(
                   animate: animate,
                   width: double.infinity,
-                  height: 12.0,
-                  borderRadius: BorderRadius.circular(4.0),
+                  height: 12,
+                  borderRadius: BorderRadius.circular(4),
                 ),
-                const SizedBox(height: 4.0),
+                const SizedBox(height: 4),
                 _SkeletonBox(
                   animate: animate,
                   width: double.infinity * 0.7,
-                  height: 12.0,
-                  borderRadius: BorderRadius.circular(4.0),
+                  height: 12,
+                  borderRadius: BorderRadius.circular(4),
                 ),
-                const SizedBox(height: 8.0),
+                const SizedBox(height: 8),
 
                 // URL skeleton
                 Row(
                   children: [
                     _SkeletonBox(
                       animate: animate,
-                      width: 16.0,
-                      height: 16.0,
-                      borderRadius: BorderRadius.circular(4.0),
+                      width: 16,
+                      height: 16,
+                      borderRadius: BorderRadius.circular(4),
                     ),
-                    const SizedBox(width: 8.0),
+                    const SizedBox(width: 8),
                     _SkeletonBox(
                       animate: animate,
-                      width: 120.0,
-                      height: 10.0,
-                      borderRadius: BorderRadius.circular(4.0),
+                      width: 120,
+                      height: 10,
+                      borderRadius: BorderRadius.circular(4),
                     ),
                   ],
                 ),
@@ -196,21 +196,21 @@ class _CompactSkeleton extends StatelessWidget {
       ),
       decoration: BoxDecoration(
         color: themeData.backgroundColor ?? colorScheme.surface,
-        borderRadius: themeData.borderRadius ?? BorderRadius.circular(12.0),
+        borderRadius: themeData.borderRadius ?? BorderRadius.circular(12),
         border: Border.all(
           color: colorScheme.outline.addOpacity(0.2),
         ),
       ),
-      padding: themeData.padding ?? const EdgeInsets.all(8.0),
+      padding: themeData.padding ?? const EdgeInsets.all(8),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           if (showImage)
             _SkeletonBox(
               animate: animate,
-              width: 60.0,
-              height: 60.0,
-              borderRadius: BorderRadius.circular(8.0),
+              width: 60,
+              height: 60,
+              borderRadius: BorderRadius.circular(8),
             ),
           if (showImage) SizedBox(width: themeData.compactSpacing ?? 8.0),
           Expanded(
@@ -222,35 +222,35 @@ class _CompactSkeleton extends StatelessWidget {
                 _SkeletonBox(
                   animate: animate,
                   width: double.infinity,
-                  height: 14.0,
-                  borderRadius: BorderRadius.circular(4.0),
+                  height: 14,
+                  borderRadius: BorderRadius.circular(4),
                 ),
-                const SizedBox(height: 6.0),
+                const SizedBox(height: 6),
 
                 // Description skeleton
                 _SkeletonBox(
                   animate: animate,
                   width: double.infinity * 0.7,
-                  height: 10.0,
-                  borderRadius: BorderRadius.circular(4.0),
+                  height: 10,
+                  borderRadius: BorderRadius.circular(4),
                 ),
-                const SizedBox(height: 6.0),
+                const SizedBox(height: 6),
 
                 // URL skeleton
                 Row(
                   children: [
                     _SkeletonBox(
                       animate: animate,
-                      width: 10.0,
-                      height: 10.0,
-                      borderRadius: BorderRadius.circular(4.0),
+                      width: 10,
+                      height: 10,
+                      borderRadius: BorderRadius.circular(4),
                     ),
-                    const SizedBox(width: 4.0),
+                    const SizedBox(width: 4),
                     _SkeletonBox(
                       animate: animate,
-                      width: 80.0,
-                      height: 8.0,
-                      borderRadius: BorderRadius.circular(4.0),
+                      width: 80,
+                      height: 8,
+                      borderRadius: BorderRadius.circular(4),
                     ),
                   ],
                 ),
@@ -289,7 +289,7 @@ class _LargeSkeleton extends StatelessWidget {
       ),
       decoration: BoxDecoration(
         color: themeData.backgroundColor ?? colorScheme.surface,
-        borderRadius: themeData.borderRadius ?? BorderRadius.circular(12.0),
+        borderRadius: themeData.borderRadius ?? BorderRadius.circular(12),
         border: Border.all(
           color: colorScheme.outline.addOpacity(0.2),
         ),
@@ -306,20 +306,20 @@ class _LargeSkeleton extends StatelessWidget {
               width: double.infinity,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.only(
-                  topLeft: (themeData.borderRadius
+                  topLeft: themeData.borderRadius
                           ?.resolve(context.directionality)
                           .topLeft ??
-                      const Radius.circular(12.0)),
-                  topRight: (themeData.borderRadius
+                      const Radius.circular(12),
+                  topRight: themeData.borderRadius
                           ?.resolve(context.directionality)
                           .topRight ??
-                      const Radius.circular(12.0)),
+                      const Radius.circular(12),
                 ),
                 color: _shimmerColor(colorScheme),
               ),
             ),
           Padding(
-            padding: themeData.contentPadding ?? const EdgeInsets.all(16.0),
+            padding: themeData.contentPadding ?? const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -328,57 +328,57 @@ class _LargeSkeleton extends StatelessWidget {
                   children: [
                     _SkeletonBox(
                       animate: animate,
-                      width: 16.0,
-                      height: 16.0,
-                      borderRadius: BorderRadius.circular(8.0),
+                      width: 16,
+                      height: 16,
+                      borderRadius: BorderRadius.circular(8),
                     ),
-                    const SizedBox(width: 8.0),
+                    const SizedBox(width: 8),
                     _SkeletonBox(
                       animate: animate,
-                      width: 100.0,
-                      height: 10.0,
-                      borderRadius: BorderRadius.circular(4.0),
+                      width: 100,
+                      height: 10,
+                      borderRadius: BorderRadius.circular(4),
                     ),
                   ],
                 ),
-                const SizedBox(height: 12.0),
+                const SizedBox(height: 12),
 
                 // Title skeleton
                 _SkeletonBox(
                   animate: animate,
                   width: double.infinity,
-                  height: 20.0,
-                  borderRadius: BorderRadius.circular(4.0),
+                  height: 20,
+                  borderRadius: BorderRadius.circular(4),
                 ),
-                const SizedBox(height: 4.0),
+                const SizedBox(height: 4),
                 _SkeletonBox(
                   animate: animate,
                   width: double.infinity * 0.8,
-                  height: 20.0,
-                  borderRadius: BorderRadius.circular(4.0),
+                  height: 20,
+                  borderRadius: BorderRadius.circular(4),
                 ),
-                const SizedBox(height: 12.0),
+                const SizedBox(height: 12),
 
                 // Description skeleton
                 _SkeletonBox(
                   animate: animate,
                   width: double.infinity,
-                  height: 14.0,
-                  borderRadius: BorderRadius.circular(4.0),
+                  height: 14,
+                  borderRadius: BorderRadius.circular(4),
                 ),
-                const SizedBox(height: 4.0),
+                const SizedBox(height: 4),
                 _SkeletonBox(
                   animate: animate,
                   width: double.infinity,
-                  height: 14.0,
-                  borderRadius: BorderRadius.circular(4.0),
+                  height: 14,
+                  borderRadius: BorderRadius.circular(4),
                 ),
-                const SizedBox(height: 4.0),
+                const SizedBox(height: 4),
                 _SkeletonBox(
                   animate: animate,
                   width: double.infinity * 0.5,
-                  height: 14.0,
-                  borderRadius: BorderRadius.circular(4.0),
+                  height: 14,
+                  borderRadius: BorderRadius.circular(4),
                 ),
               ],
             ),
@@ -424,7 +424,7 @@ class _SkeletonBoxState extends State<_SkeletonBox>
       duration: const Duration(milliseconds: 1500),
     );
 
-    _animation = Tween<double>(begin: 0.0, end: 1.0).animate(_controller);
+    _animation = Tween<double>(begin: 0, end: 1).animate(_controller);
 
     if (widget.animate) {
       _controller.repeat();

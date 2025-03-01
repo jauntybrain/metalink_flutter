@@ -11,6 +11,10 @@
   A Flutter package for beautiful, highly customizable link preview widgets, built on top of the <a href="https://pub.dev/packages/metalink">MetaLink</a> package.
 </p>
 
+<p align="center">
+  <img src="https://raw.githubusercontent.com/omar-hanafy/metalink_flutter/refs/heads/main/screenshots/cover.png" width="100%" alt="Cover">
+</p>
+
 ## ✨ Features
 
 - 🔗 **Rich link previews** with images, favicon, title, and description
@@ -26,11 +30,12 @@
 ## 📸 Screenshots
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/omar-hanafy/metalink_flutter/refs/heads/main/screenshots/1.png" width="30%" alt="Card Style">
-  <img src="https://raw.githubusercontent.com/omar-hanafy/metalink_flutter/refs/heads/main/screenshots/2.png" width="30%" alt="Compact Style">
-  <img src="https://raw.githubusercontent.com/omar-hanafy/metalink_flutter/refs/heads/main/screenshots/3.png" width="30%" alt="Large Style">
-  <img src="https://raw.githubusercontent.com/omar-hanafy/metalink_flutter/refs/heads/main/screenshots/4.png" width="30%" alt="Large Style">
+  <img src="https://raw.githubusercontent.com/omar-hanafy/metalink_flutter/refs/heads/main/screenshots/1.png" width="40%" alt="Card Style">
+  <img src="https://raw.githubusercontent.com/omar-hanafy/metalink_flutter/refs/heads/main/screenshots/2.png" width="40%" alt="Compact Style">
+  <img src="https://raw.githubusercontent.com/omar-hanafy/metalink_flutter/refs/heads/main/screenshots/3.png" width="40%" alt="Large Style">
+  <img src="https://raw.githubusercontent.com/omar-hanafy/metalink_flutter/refs/heads/main/screenshots/4.png" width="40%" alt="Large Style">
 </p>
+
 
 ## 🚀 Getting Started
 
@@ -353,6 +358,15 @@ final metadataList = await provider.getMultipleMetadata([
 await provider.clearCache();
 ```
 
+## Web Platform Limitations
+
+When using this package in Flutter Web, browser security policies,
+specifically Cross-Origin Resource Sharing ([CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS)), restrict direct HTTP requests to external domains.
+To work around this limitation, consider the following options:
+
+- **If you control the server**: Enable [CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) by configuring the server to include appropriate response headers (e.g., `Access-Control-Allow-Origin: *` or your app’s domain). This allows the browser to permit requests from your Flutter Web app.
+- **Alternative**: Set up your server to act as a proxy. Make a direct request from your Flutter Web app to your server, which then fetches the metadata from the external domain and returns it to your app. This bypasses [CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) restrictions entirely, as the request originates server-side.
+
 ## 📄 API Documentation
 
 ### Main Classes
@@ -370,20 +384,30 @@ For complete API documentation, please see the [API reference](https://pub.dev/d
 ## 🙋 FAQ
 
 **Q: Does this work with any URL?**  
-A: Yes, the package attempts to extract metadata from any valid URL. The quality of the preview depends on the metadata available on the target website.
+A: Yes, the package attempts to extract metadata from any valid URL.
+The quality of the preview depends on the metadata available on the target website.
+
+**Q: Why do I get errors when fetching metadata on Flutter Web?**  
+A: On Flutter Web, browser CORS restrictions prevent direct requests to external domains. To resolve this, either enable
+CORS on the target server (if you control it) by adding headers like `Access-Control-Allow-Origin`, or use a proxy
+server to fetch the metadata and relay it to your app. See "Web Platform Limitations" for details.
 
 **Q: How is caching handled?**  
-A: The package caches metadata in memory and optionally on disk using `hive_ce`. You can configure the cache duration and clear the cache programmatically.
+A: The package caches metadata in memory and optionally on disk using `hive_ce`. You can configure the cache duration
+and clear the cache programmatically.
 
 **Q: Does it support RTL languages?**  
-A: Yes, the package uses Flutter's logical directional properties (`start`/`end` instead of `left`/`right`) for proper RTL support.
+A: Yes, the package uses Flutter's logical directional properties (`start`/`end` instead of `left`/`right`) for proper
+RTL support.
 
 **Q: Can I customize the loading animation?**  
 A: Yes, you can provide your own loading widget using the `loadingBuilder` parameter.
 
 ## 👨‍💻 Contributing
 
-Contributions are welcome! If you find a bug or want a feature, please open an issue. If you want to contribute code, please fork the repository and submit a pull request.
+Contributions are welcome!
+If you find a bug or want a feature, please open an issue.
+If you want to contribute code, please fork the repository and submit a pull request.
 
 ## 📄 License
 

@@ -25,8 +25,8 @@ class ImageResolver {
     final intHeight = height?.toInt();
 
     // Calculate missing dimension if aspect ratio is available
-    int? calculatedWidth = intWidth;
-    int? calculatedHeight = intHeight;
+    var calculatedWidth = intWidth;
+    var calculatedHeight = intHeight;
 
     if (metadata.aspectRatio != null) {
       if (intWidth != null && intHeight == null) {

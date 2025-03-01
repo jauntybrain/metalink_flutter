@@ -1,163 +1,46 @@
 import 'package:flutter/material.dart';
+import 'package:metalink_flutter/metalink_flutter.dart';
 
-import '../controllers/link_preview_controller.dart';
-import '../controllers/metadata_provider.dart';
-import '../models/link_preview_data.dart';
-import '../models/link_preview_style.dart';
-import 'link_preview_builder.dart';
+/// the call back of on tap on any [LinkPreview] widget.
+typedef LinkPreviewTapCallBack = void Function(LinkMetadata? data);
 
 /// Main link preview widget that can be configured and used directly
 class LinkPreview extends StatelessWidget {
   /// Creates a [LinkPreview] with the given URL and configuration.
   const LinkPreview({
-    super.key,
     required this.url,
+    super.key,
     this.controller,
     this.provider,
     this.config = const LinkPreviewConfig(),
     this.onTap,
+    this.useCache = true,
+    this.cacheDuration,
+    this.forceRefresh = false,
     this.errorBuilder,
     this.loadingBuilder,
+    this.emptyBuilder,
     this.previewBuilder,
   });
 
-  /// URL to load preview for
-  final String url;
-
-  /// Optional controller for managing the preview
-  final LinkPreviewController? controller;
-
-  /// Optional metadata provider
-  final MetadataProvider? provider;
-
-  /// Configuration for the preview
-  final LinkPreviewConfig config;
-
-  /// Callback when the preview is tapped
-  final VoidCallback? onTap;
-
-  /// Builder for handling errors
-  final Widget Function(BuildContext context, Object error)? errorBuilder;
-
-  /// Builder for customizing the loading state
-  final Widget Function(BuildContext context)? loadingBuilder;
-
-  /// Custom builder for the preview
-  final Widget Function(BuildContext context, LinkPreviewData data)?
-      previewBuilder;
-
-  @override
-  Widget build(BuildContext context) {
-    if (previewBuilder != null) {
-      return _CustomLinkPreview(
-        url: url,
-        controller: controller,
-        provider: provider,
-        onTap: onTap,
-        errorBuilder: errorBuilder,
-        loadingBuilder: loadingBuilder,
-        previewBuilder: previewBuilder!,
-      );
-    }
-
-    return LinkPreviewBuilder(
-      url: url,
-      controller: controller,
-      provider: provider,
-      style: config.style,
-      titleMaxLines: config.titleMaxLines,
-      descriptionMaxLines: config.descriptionMaxLines,
-      showImage: config.showImage,
-      showFavicon: config.showFavicon,
-      onTap: onTap,
-      handleNavigation: config.handleNavigation,
-      errorBuilder: errorBuilder,
-      loadingBuilder: loadingBuilder,
-    );
-  }
-
-  /// Creates a compact style link preview
-  factory LinkPreview.compact({
-    Key? key,
-    required String url,
-    LinkPreviewController? controller,
-    MetadataProvider? provider,
-    int titleMaxLines = 1,
-    int descriptionMaxLines = 1,
-    bool showImage = true,
-    bool showFavicon = true,
-    VoidCallback? onTap,
-    bool handleNavigation = true,
-    Widget Function(BuildContext context, Object error)? errorBuilder,
-    Widget Function(BuildContext context)? loadingBuilder,
-  }) {
-    return LinkPreview(
-      key: key,
-      url: url,
-      controller: controller,
-      provider: provider,
-      config: LinkPreviewConfig(
-        style: LinkPreviewStyle.compact,
-        titleMaxLines: titleMaxLines,
-        descriptionMaxLines: descriptionMaxLines,
-        showImage: showImage,
-        showFavicon: showFavicon,
-        handleNavigation: handleNavigation,
-      ),
-      onTap: onTap,
-      errorBuilder: errorBuilder,
-      loadingBuilder: loadingBuilder,
-    );
-  }
-
-  /// Creates a card style link preview
-  factory LinkPreview.card({
-    Key? key,
-    required String url,
-    LinkPreviewController? controller,
-    MetadataProvider? provider,
-    int titleMaxLines = 2,
-    int descriptionMaxLines = 3,
-    bool showImage = true,
-    bool showFavicon = true,
-    VoidCallback? onTap,
-    bool handleNavigation = true,
-    Widget Function(BuildContext context, Object error)? errorBuilder,
-    Widget Function(BuildContext context)? loadingBuilder,
-  }) {
-    return LinkPreview(
-      key: key,
-      url: url,
-      controller: controller,
-      provider: provider,
-      config: LinkPreviewConfig(
-        style: LinkPreviewStyle.card,
-        titleMaxLines: titleMaxLines,
-        descriptionMaxLines: descriptionMaxLines,
-        showImage: showImage,
-        showFavicon: showFavicon,
-        handleNavigation: handleNavigation,
-      ),
-      onTap: onTap,
-      errorBuilder: errorBuilder,
-      loadingBuilder: loadingBuilder,
-    );
-  }
-
   /// Creates a large style link preview
   factory LinkPreview.large({
-    Key? key,
     required String url,
+    Key? key,
     LinkPreviewController? controller,
     MetadataProvider? provider,
     int titleMaxLines = 2,
     int descriptionMaxLines = 4,
     bool showImage = true,
     bool showFavicon = true,
-    VoidCallback? onTap,
+    LinkPreviewTapCallBack? onTap,
     bool handleNavigation = true,
+    bool useCache = true,
+    Duration? cacheDuration,
+    bool forceRefresh = false,
     Widget Function(BuildContext context, Object error)? errorBuilder,
     Widget Function(BuildContext context)? loadingBuilder,
+    Widget Function(BuildContext context)? emptyBuilder,
   }) {
     return LinkPreview(
       key: key,
@@ -173,22 +56,113 @@ class LinkPreview extends StatelessWidget {
         handleNavigation: handleNavigation,
       ),
       onTap: onTap,
+      useCache: useCache,
+      cacheDuration: cacheDuration,
+      forceRefresh: forceRefresh,
       errorBuilder: errorBuilder,
       loadingBuilder: loadingBuilder,
+      emptyBuilder: emptyBuilder,
+    );
+  }
+
+  /// Creates a compact style link preview
+  factory LinkPreview.compact({
+    required String url,
+    Key? key,
+    LinkPreviewController? controller,
+    MetadataProvider? provider,
+    int titleMaxLines = 1,
+    int descriptionMaxLines = 1,
+    bool showImage = true,
+    bool showFavicon = true,
+    LinkPreviewTapCallBack? onTap,
+    bool handleNavigation = true,
+    bool useCache = true,
+    Duration? cacheDuration,
+    bool forceRefresh = false,
+    Widget Function(BuildContext context, Object error)? errorBuilder,
+    Widget Function(BuildContext context)? loadingBuilder,
+    Widget Function(BuildContext context)? emptyBuilder,
+  }) {
+    return LinkPreview(
+      key: key,
+      url: url,
+      controller: controller,
+      provider: provider,
+      config: LinkPreviewConfig(
+        style: LinkPreviewStyle.compact,
+        titleMaxLines: titleMaxLines,
+        descriptionMaxLines: descriptionMaxLines,
+        showImage: showImage,
+        showFavicon: showFavicon,
+        handleNavigation: handleNavigation,
+      ),
+      onTap: onTap,
+      useCache: useCache,
+      cacheDuration: cacheDuration,
+      forceRefresh: forceRefresh,
+      errorBuilder: errorBuilder,
+      loadingBuilder: loadingBuilder,
+      emptyBuilder: emptyBuilder,
+    );
+  }
+
+  /// Creates a card style link preview
+  factory LinkPreview.card({
+    required String url,
+    Key? key,
+    LinkPreviewController? controller,
+    MetadataProvider? provider,
+    int titleMaxLines = 2,
+    int descriptionMaxLines = 3,
+    bool showImage = true,
+    bool showFavicon = true,
+    LinkPreviewTapCallBack? onTap,
+    bool handleNavigation = true,
+    bool useCache = true,
+    Duration? cacheDuration,
+    bool forceRefresh = false,
+    Widget Function(BuildContext context, Object error)? errorBuilder,
+    Widget Function(BuildContext context)? loadingBuilder,
+    Widget Function(BuildContext context)? emptyBuilder,
+  }) {
+    return LinkPreview(
+      key: key,
+      url: url,
+      controller: controller,
+      provider: provider,
+      config: LinkPreviewConfig(
+        style: LinkPreviewStyle.card,
+        titleMaxLines: titleMaxLines,
+        descriptionMaxLines: descriptionMaxLines,
+        showImage: showImage,
+        showFavicon: showFavicon,
+        handleNavigation: handleNavigation,
+      ),
+      onTap: onTap,
+      useCache: useCache,
+      cacheDuration: cacheDuration,
+      forceRefresh: forceRefresh,
+      errorBuilder: errorBuilder,
+      loadingBuilder: loadingBuilder,
+      emptyBuilder: emptyBuilder,
     );
   }
 
   /// Creates a custom style link preview with complete control over rendering
   factory LinkPreview.custom({
-    Key? key,
     required String url,
-    required Widget Function(BuildContext context, LinkPreviewData data)
-        builder,
+    required Widget Function(BuildContext context, LinkMetadata data) builder,
+    Key? key,
     LinkPreviewController? controller,
     MetadataProvider? provider,
-    VoidCallback? onTap,
+    LinkPreviewTapCallBack? onTap,
+    bool useCache = true,
+    Duration? cacheDuration,
+    bool forceRefresh = false,
     Widget Function(BuildContext context, Object error)? errorBuilder,
     Widget Function(BuildContext context)? loadingBuilder,
+    Widget Function(BuildContext context)? emptyBuilder,
   }) {
     return LinkPreview(
       key: key,
@@ -196,14 +170,94 @@ class LinkPreview extends StatelessWidget {
       controller: controller,
       provider: provider,
       onTap: onTap,
+      useCache: useCache,
+      cacheDuration: cacheDuration,
+      forceRefresh: forceRefresh,
       errorBuilder: errorBuilder,
       loadingBuilder: loadingBuilder,
+      emptyBuilder: emptyBuilder,
       previewBuilder: builder,
+    );
+  }
+
+  /// URL to load preview for
+  final String url;
+
+  /// Optional controller for managing the preview
+  final LinkPreviewController? controller;
+
+  /// Optional metadata provider
+  final MetadataProvider? provider;
+
+  /// Configuration for the preview
+  final LinkPreviewConfig config;
+
+  /// Callback when the preview is tapped
+  final LinkPreviewTapCallBack? onTap;
+
+  /// Whether to use caching
+  final bool useCache;
+
+  /// Optional custom cache duration
+  final Duration? cacheDuration;
+
+  /// Whether to force refresh the data
+  final bool forceRefresh;
+
+  /// Builder for handling errors
+  final Widget Function(BuildContext context, Object error)? errorBuilder;
+
+  /// Builder for customizing the loading state
+  final Widget Function(BuildContext context)? loadingBuilder;
+
+  /// Builder for when no data is available
+  final Widget Function(BuildContext context)? emptyBuilder;
+
+  /// Custom builder for the preview
+  final Widget Function(BuildContext context, LinkMetadata data)?
+      previewBuilder;
+
+  @override
+  Widget build(BuildContext context) {
+    if (previewBuilder != null) {
+      return _CustomLinkPreview(
+        url: url,
+        controller: controller,
+        provider: provider,
+        onTap: onTap,
+        useCache: useCache,
+        cacheDuration: cacheDuration,
+        forceRefresh: forceRefresh,
+        errorBuilder: errorBuilder,
+        loadingBuilder: loadingBuilder,
+        emptyBuilder: emptyBuilder,
+        previewBuilder: previewBuilder!,
+      );
+    }
+
+    return LinkPreviewBuilder(
+      url: url,
+      controller: controller,
+      provider: provider,
+      style: config.style,
+      titleMaxLines: config.titleMaxLines,
+      descriptionMaxLines: config.descriptionMaxLines,
+      showImage: config.showImage,
+      showFavicon: config.showFavicon,
+      proxyUrl: config.proxyUrl,
+      onTap: onTap,
+      handleNavigation: config.handleNavigation,
+      useCache: useCache,
+      cacheDuration: cacheDuration,
+      forceRefresh: forceRefresh,
+      errorBuilder: errorBuilder,
+      loadingBuilder: loadingBuilder,
+      emptyBuilder: emptyBuilder,
     );
   }
 }
 
-/// Private widget for custom link previews
+/// Widget for custom link previews
 class _CustomLinkPreview extends StatefulWidget {
   const _CustomLinkPreview({
     required this.url,
@@ -211,42 +265,102 @@ class _CustomLinkPreview extends StatefulWidget {
     this.controller,
     this.provider,
     this.onTap,
+    this.useCache = true,
+    this.cacheDuration,
+    this.forceRefresh = false,
     this.errorBuilder,
     this.loadingBuilder,
+    this.emptyBuilder,
   });
 
   final String url;
   final LinkPreviewController? controller;
   final MetadataProvider? provider;
-  final VoidCallback? onTap;
+  final LinkPreviewTapCallBack? onTap;
+  final bool useCache;
+  final Duration? cacheDuration;
+  final bool forceRefresh;
   final Widget Function(BuildContext context, Object error)? errorBuilder;
   final Widget Function(BuildContext context)? loadingBuilder;
-  final Widget Function(BuildContext context, LinkPreviewData data)
-      previewBuilder;
+  final Widget Function(BuildContext context)? emptyBuilder;
+  final Widget Function(BuildContext context, LinkMetadata data) previewBuilder;
 
   @override
   State<_CustomLinkPreview> createState() => _CustomLinkPreviewState();
 }
 
 class _CustomLinkPreviewState extends State<_CustomLinkPreview> {
-  late LinkPreviewController _controller;
+  LinkPreviewController? _controller;
   bool _isLocalController = false;
+  bool _isInitializing = false;
 
   @override
   void initState() {
     super.initState();
+    _initializeController();
+  }
 
+  Future<void> _initializeController() async {
+    // If a controller was provided by the parent, use it
     if (widget.controller != null) {
-      _controller = widget.controller!;
-      if (_controller.url != widget.url) {
-        _controller.setUrl(widget.url);
+      setState(() {
+        _controller = widget.controller;
+        _isLocalController = false;
+
+        // If the controller has a different URL, update it
+        if (_controller?.url != widget.url) {
+          _controller?.setUrl(widget.url, forceRefresh: widget.forceRefresh);
+        }
+      });
+      return;
+    }
+
+    // Otherwise, we need to create our own controller
+    setState(() => _isInitializing = true);
+
+    try {
+      // Create controller based on caching preference
+      if (widget.useCache) {
+        final controller = await LinkPreviewController.withCache(
+          initialUrl: widget.url,
+          cacheDuration: widget.cacheDuration ?? const Duration(hours: 24),
+        );
+
+        // Check if widget is still mounted before updating state
+        if (!mounted) return;
+
+        setState(() {
+          _controller = controller;
+          _isLocalController = true;
+          _isInitializing = false;
+        });
+      } else {
+        // Create a non-cached controller immediately
+        final controller = LinkPreviewController(
+          provider: widget.provider,
+          initialUrl: widget.url,
+        );
+
+        if (!mounted) return;
+
+        setState(() {
+          _controller = controller;
+          _isLocalController = true;
+          _isInitializing = false;
+        });
       }
-    } else {
-      _controller = LinkPreviewController(
-        provider: widget.provider,
-        initialUrl: widget.url,
-      );
-      _isLocalController = true;
+    } catch (e) {
+      // Handle initialization errors
+      if (!mounted) return;
+
+      setState(() {
+        _isInitializing = false;
+        // We'll create a basic controller without cache
+        _controller = LinkPreviewController(
+          initialUrl: widget.url,
+        );
+        _isLocalController = true;
+      });
     }
   }
 
@@ -254,62 +368,59 @@ class _CustomLinkPreviewState extends State<_CustomLinkPreview> {
   void didUpdateWidget(_CustomLinkPreview oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    if (oldWidget.url != widget.url) {
-      _controller.setUrl(widget.url);
+    // Update URL if it changed
+    if (oldWidget.url != widget.url && _controller != null) {
+      _controller!.setUrl(widget.url, forceRefresh: widget.forceRefresh);
     }
 
     // Handle controller changes
     if (oldWidget.controller != widget.controller) {
-      if (_isLocalController) {
-        _controller.dispose();
-      }
+      _disposeLocalController();
+      _initializeController();
+    }
+  }
 
-      if (widget.controller != null) {
-        _controller = widget.controller!;
-        _isLocalController = false;
-        if (_controller.url != widget.url) {
-          _controller.setUrl(widget.url);
-        }
-      } else {
-        _controller = LinkPreviewController(
-          provider: widget.provider,
-          initialUrl: widget.url,
-        );
-        _isLocalController = true;
-      }
+  void _disposeLocalController() {
+    if (_isLocalController && _controller != null) {
+      _controller!.dispose();
+      _controller = null;
     }
   }
 
   @override
   void dispose() {
-    if (_isLocalController) {
-      _controller.dispose();
-    }
+    _disposeLocalController();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    // If the controller is still initializing, show loading state
+    if (_isInitializing || _controller == null) {
+      return widget.loadingBuilder?.call(context) ??
+          const CircularProgressIndicator();
+    }
+
     return AnimatedBuilder(
-      animation: _controller,
+      animation: _controller!,
       builder: (context, child) {
-        if (_controller.isLoading) {
+        if (_controller!.isLoading) {
           return widget.loadingBuilder?.call(context) ??
               const CircularProgressIndicator();
         }
 
-        if (_controller.error != null) {
-          return widget.errorBuilder?.call(context, _controller.error!) ??
+        if (_controller!.error != null) {
+          return widget.errorBuilder?.call(context, _controller!.error!) ??
               const SizedBox.shrink();
         }
 
-        if (!_controller.hasData) {
-          return const SizedBox.shrink();
+        if (!_controller!.hasData) {
+          return widget.emptyBuilder?.call(context) ?? const SizedBox.shrink();
         }
 
         return GestureDetector(
-          onTap: widget.onTap,
-          child: widget.previewBuilder(context, _controller.data!),
+          onTap: () => widget.onTap?.call(_controller?.data),
+          child: widget.previewBuilder(context, _controller!.data!),
         );
       },
     );

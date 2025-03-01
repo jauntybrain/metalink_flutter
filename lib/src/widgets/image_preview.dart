@@ -7,8 +7,8 @@ import '../themes/link_preview_theme.dart';
 class ImagePreview extends StatelessWidget {
   /// Creates an [ImagePreview] with the given URL and metadata.
   const ImagePreview({
-    super.key,
     required this.imageUrl,
+    super.key,
     this.imageMetadata,
     this.width,
     this.height,

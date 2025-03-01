@@ -3,6 +3,7 @@ import 'package:flutter_helper_utils/flutter_helper_utils.dart';
 import 'package:metalink_flutter/metalink_flutter.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MetalinkShowcaseApp());
 }
 
@@ -941,7 +942,7 @@ class _CustomPreviewShowcaseState extends State<CustomPreviewShowcase> {
     );
   }
 
-  Widget _buildSocialMediaPreview(BuildContext context, LinkPreviewData data) {
+  Widget _buildSocialMediaPreview(BuildContext context, LinkMetadata data) {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Card(
@@ -1053,7 +1054,7 @@ class _CustomPreviewShowcaseState extends State<CustomPreviewShowcase> {
     );
   }
 
-  Widget _buildProductCard(BuildContext context, LinkPreviewData data) {
+  Widget _buildProductCard(BuildContext context, LinkMetadata data) {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Container(
@@ -1181,7 +1182,7 @@ class _CustomPreviewShowcaseState extends State<CustomPreviewShowcase> {
     );
   }
 
-  Widget _buildNewsArticle(BuildContext context, LinkPreviewData data) {
+  Widget _buildNewsArticle(BuildContext context, LinkMetadata data) {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Container(
@@ -1304,7 +1305,7 @@ class _CustomPreviewShowcaseState extends State<CustomPreviewShowcase> {
     );
   }
 
-  Widget _buildVideoPreview(BuildContext context, LinkPreviewData data) {
+  Widget _buildVideoPreview(BuildContext context, LinkMetadata data) {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Container(

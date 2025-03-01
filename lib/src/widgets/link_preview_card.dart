@@ -1,18 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_helper_utils/flutter_helper_utils.dart';
+import 'package:metalink_flutter/metalink_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import '../models/link_preview_data.dart';
-import '../themes/link_preview_theme.dart';
-import 'favicon_widget.dart';
-import 'image_preview.dart';
 
 /// A card-style link preview widget
 class LinkPreviewCard extends StatelessWidget {
   /// Creates a [LinkPreviewCard] with the given data.
   const LinkPreviewCard({
-    super.key,
     required this.data,
+    super.key,
     this.titleMaxLines = 2,
     this.descriptionMaxLines = 3,
     this.showImage = true,
@@ -22,7 +18,7 @@ class LinkPreviewCard extends StatelessWidget {
   });
 
   /// The data to display in the preview
-  final LinkPreviewData data;
+  final LinkMetadata data;
 
   /// Maximum number of lines for the title
   final int titleMaxLines;
@@ -37,7 +33,7 @@ class LinkPreviewCard extends StatelessWidget {
   final bool showFavicon;
 
   /// Callback when the preview is tapped
-  final VoidCallback? onTap;
+  final LinkPreviewTapCallBack? onTap;
 
   /// Whether to handle navigation when tapped
   final bool handleNavigation;
@@ -49,7 +45,7 @@ class LinkPreviewCard extends StatelessWidget {
 
     // Default border radius from theme or fallback
     final borderRadius =
-        themeData.borderRadius ?? BorderRadiusDirectional.circular(12.0);
+        themeData.borderRadius ?? BorderRadiusDirectional.circular(12);
 
     return Card(
       elevation: themeData.elevation ?? 0.0,
@@ -62,12 +58,16 @@ class LinkPreviewCard extends StatelessWidget {
       color: themeData.backgroundColor ?? colorScheme.surface,
       margin: EdgeInsets.zero,
       child: InkWell(
-        onTap: onTap ?? (handleNavigation ? () => _launchUrl(data.url) : null),
+        onTap: () => onTap != null
+            ? onTap?.call(data)
+            : handleNavigation
+                ? _launchUrl(data.originalUrl)
+                : null,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            if (showImage && data.imageUrl != null)
+            if (showImage && data.hasImage)
               ImagePreview(
                 imageUrl: data.imageUrl!,
                 imageMetadata: data.imageMetadata,
@@ -80,7 +80,7 @@ class LinkPreviewCard extends StatelessWidget {
                 ),
               ),
             Padding(
-              padding: themeData.contentPadding ?? const EdgeInsets.all(12.0),
+              padding: themeData.contentPadding ?? const EdgeInsets.all(12),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -96,7 +96,7 @@ class LinkPreviewCard extends StatelessWidget {
                     ),
 
                   if (data.title != null && data.description != null)
-                    const SizedBox(height: 8.0),
+                    const SizedBox(height: 8),
 
                   if (data.description != null)
                     Text(
@@ -109,7 +109,7 @@ class LinkPreviewCard extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
 
-                  const SizedBox(height: 8.0),
+                  const SizedBox(height: 8),
 
                   // Domain and favicon
                   Row(
@@ -121,7 +121,7 @@ class LinkPreviewCard extends StatelessWidget {
                           backgroundColor: colorScheme.surfaceContainerHighest,
                         ),
                       if (showFavicon && data.hasFavicon)
-                        const SizedBox(width: 8.0),
+                        const SizedBox(width: 8),
                       Expanded(
                         child: Text(
                           data.siteName ?? data.hostname,
@@ -145,7 +145,7 @@ class LinkPreviewCard extends StatelessWidget {
     );
   }
 
-  void _launchUrl(String url) async {
+  Future<void> _launchUrl(String url) async {
     final uri = Uri.parse(url);
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri);

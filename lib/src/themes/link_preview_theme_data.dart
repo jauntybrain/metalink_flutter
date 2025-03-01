@@ -33,6 +33,85 @@ class LinkPreviewThemeData with Diagnosticable {
     this.showImage = true,
   });
 
+  /// Linearly interpolate between two [LinkPreviewThemeData] objects.
+  factory LinkPreviewThemeData.lerp(
+      LinkPreviewThemeData? a, LinkPreviewThemeData? b, double t) {
+    if (a == null && b == null) return const LinkPreviewThemeData();
+    if (a == null) return b!;
+    if (b == null) return a;
+    return LinkPreviewThemeData(
+      backgroundColor: Color.lerp(a.backgroundColor, b.backgroundColor, t),
+      titleStyle: TextStyle.lerp(a.titleStyle, b.titleStyle, t),
+      descriptionStyle:
+          TextStyle.lerp(a.descriptionStyle, b.descriptionStyle, t),
+      urlStyle: TextStyle.lerp(a.urlStyle, b.urlStyle, t),
+      siteNameStyle: TextStyle.lerp(a.siteNameStyle, b.siteNameStyle, t),
+      borderRadius:
+          BorderRadiusGeometry.lerp(a.borderRadius, b.borderRadius, t),
+      elevation: t < 0.5 ? a.elevation : b.elevation,
+      padding: EdgeInsetsGeometry.lerp(a.padding, b.padding, t),
+      imageHeight: t < 0.5 ? a.imageHeight : b.imageHeight,
+      maxHeight: t < 0.5 ? a.maxHeight : b.maxHeight,
+      maxWidth: t < 0.5 ? a.maxWidth : b.maxWidth,
+      imageBorderRadius: BorderRadiusGeometry.lerp(
+          a.imageBorderRadius, b.imageBorderRadius, t),
+      imagePlaceholderColor:
+          Color.lerp(a.imagePlaceholderColor, b.imagePlaceholderColor, t),
+      faviconSize: t < 0.5 ? a.faviconSize : b.faviconSize,
+      compactSpacing: t < 0.5 ? a.compactSpacing : b.compactSpacing,
+      contentPadding:
+          EdgeInsetsGeometry.lerp(a.contentPadding, b.contentPadding, t),
+      cardShape: t < 0.5 ? a.cardShape : b.cardShape,
+      defaultImageErrorBuilder:
+          t < 0.5 ? a.defaultImageErrorBuilder : b.defaultImageErrorBuilder,
+      defaultImageLoadingBuilder:
+          t < 0.5 ? a.defaultImageLoadingBuilder : b.defaultImageLoadingBuilder,
+      showFavicon: t < 0.5 ? a.showFavicon : b.showFavicon,
+      showImage: t < 0.5 ? a.showImage : b.showImage,
+    );
+  }
+
+  /// Returns a [LinkPreviewThemeData] with default values
+  /// based on the provided [context] and [colorScheme].
+  factory LinkPreviewThemeData.defaults(
+      BuildContext context, ColorScheme colorScheme) {
+    final textTheme = Theme.of(context).textTheme;
+
+    return LinkPreviewThemeData(
+      backgroundColor: colorScheme.surface,
+      titleStyle: textTheme.titleMedium?.copyWith(
+        color: colorScheme.onSurface,
+        fontWeight: FontWeight.w600,
+      ),
+      descriptionStyle: textTheme.bodyMedium?.copyWith(
+        color: colorScheme.onSurface.addOpacity(0.7),
+      ),
+      urlStyle: textTheme.bodySmall?.copyWith(
+        color: colorScheme.primary,
+      ),
+      siteNameStyle: textTheme.labelMedium?.copyWith(
+        color: colorScheme.onSurface.addOpacity(0.6),
+      ),
+      borderRadius: BorderRadiusDirectional.circular(12.0),
+      elevation: 0.0,
+      padding: const EdgeInsets.all(12.0),
+      imageHeight: 150.0,
+      maxHeight: 320.0,
+      maxWidth: double.infinity,
+      imageBorderRadius: BorderRadiusDirectional.circular(8.0),
+      imagePlaceholderColor: colorScheme.surfaceContainerHighest,
+      faviconSize: 16.0,
+      compactSpacing: 8.0,
+      contentPadding: const EdgeInsets.all(12.0),
+      cardShape: RoundedRectangleBorder(
+        borderRadius: BorderRadiusDirectional.circular(12.0),
+        side: BorderSide(color: colorScheme.outline.addOpacity(0.2)),
+      ),
+      showFavicon: true,
+      showImage: true,
+    );
+  }
+
   /// Default background color for the link preview card.
   final Color? backgroundColor;
 
@@ -181,119 +260,39 @@ class LinkPreviewThemeData with Diagnosticable {
     );
   }
 
-  /// Returns a [LinkPreviewThemeData] with default values
-  /// based on the provided [context] and [colorScheme].
-  factory LinkPreviewThemeData.defaults(
-      BuildContext context, ColorScheme colorScheme) {
-    final textTheme = Theme.of(context).textTheme;
-
-    return LinkPreviewThemeData(
-      backgroundColor: colorScheme.surface,
-      titleStyle: textTheme.titleMedium?.copyWith(
-        color: colorScheme.onSurface,
-        fontWeight: FontWeight.w600,
-      ),
-      descriptionStyle: textTheme.bodyMedium?.copyWith(
-        color: colorScheme.onSurface.addOpacity(0.7),
-      ),
-      urlStyle: textTheme.bodySmall?.copyWith(
-        color: colorScheme.primary,
-      ),
-      siteNameStyle: textTheme.labelMedium?.copyWith(
-        color: colorScheme.onSurface.addOpacity(0.6),
-      ),
-      borderRadius: BorderRadiusDirectional.circular(12.0),
-      elevation: 0.0,
-      padding: const EdgeInsets.all(12.0),
-      imageHeight: 150.0,
-      maxHeight: 320.0,
-      maxWidth: double.infinity,
-      imageBorderRadius: BorderRadiusDirectional.circular(8.0),
-      imagePlaceholderColor: colorScheme.surfaceContainerHighest,
-      faviconSize: 16.0,
-      compactSpacing: 8.0,
-      contentPadding: const EdgeInsets.all(12.0),
-      cardShape: RoundedRectangleBorder(
-        borderRadius: BorderRadiusDirectional.circular(12.0),
-        side: BorderSide(color: colorScheme.outline.addOpacity(0.2)),
-      ),
-      showFavicon: true,
-      showImage: true,
-    );
-  }
-
-  /// Linearly interpolate between two [LinkPreviewThemeData] objects.
-  static LinkPreviewThemeData lerp(
-      LinkPreviewThemeData? a, LinkPreviewThemeData? b, double t) {
-    if (a == null && b == null) return const LinkPreviewThemeData();
-    if (a == null) return b!;
-    if (b == null) return a;
-    return LinkPreviewThemeData(
-      backgroundColor: Color.lerp(a.backgroundColor, b.backgroundColor, t),
-      titleStyle: TextStyle.lerp(a.titleStyle, b.titleStyle, t),
-      descriptionStyle:
-          TextStyle.lerp(a.descriptionStyle, b.descriptionStyle, t),
-      urlStyle: TextStyle.lerp(a.urlStyle, b.urlStyle, t),
-      siteNameStyle: TextStyle.lerp(a.siteNameStyle, b.siteNameStyle, t),
-      borderRadius:
-          BorderRadiusGeometry.lerp(a.borderRadius, b.borderRadius, t),
-      elevation: t < 0.5 ? a.elevation : b.elevation,
-      padding: EdgeInsetsGeometry.lerp(a.padding, b.padding, t),
-      imageHeight: t < 0.5 ? a.imageHeight : b.imageHeight,
-      maxHeight: t < 0.5 ? a.maxHeight : b.maxHeight,
-      maxWidth: t < 0.5 ? a.maxWidth : b.maxWidth,
-      imageBorderRadius: BorderRadiusGeometry.lerp(
-          a.imageBorderRadius, b.imageBorderRadius, t),
-      imagePlaceholderColor:
-          Color.lerp(a.imagePlaceholderColor, b.imagePlaceholderColor, t),
-      faviconSize: t < 0.5 ? a.faviconSize : b.faviconSize,
-      compactSpacing: t < 0.5 ? a.compactSpacing : b.compactSpacing,
-      contentPadding:
-          EdgeInsetsGeometry.lerp(a.contentPadding, b.contentPadding, t),
-      cardShape: t < 0.5 ? a.cardShape : b.cardShape,
-      defaultImageErrorBuilder:
-          t < 0.5 ? a.defaultImageErrorBuilder : b.defaultImageErrorBuilder,
-      defaultImageLoadingBuilder:
-          t < 0.5 ? a.defaultImageLoadingBuilder : b.defaultImageLoadingBuilder,
-      showFavicon: t < 0.5 ? a.showFavicon : b.showFavicon,
-      showImage: t < 0.5 ? a.showImage : b.showImage,
-    );
-  }
-
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(ColorProperty('backgroundColor', backgroundColor));
-    properties.add(DiagnosticsProperty<TextStyle>('titleStyle', titleStyle));
-    properties.add(
-        DiagnosticsProperty<TextStyle>('descriptionStyle', descriptionStyle));
-    properties.add(DiagnosticsProperty<TextStyle>('urlStyle', urlStyle));
     properties
-        .add(DiagnosticsProperty<TextStyle>('siteNameStyle', siteNameStyle));
-    properties.add(DiagnosticsProperty<BorderRadiusGeometry>(
-        'borderRadius', borderRadius));
-    properties.add(DoubleProperty('elevation', elevation));
-    properties.add(DiagnosticsProperty<EdgeInsetsGeometry>('padding', padding));
-    properties.add(DoubleProperty('imageHeight', imageHeight));
-    properties.add(DoubleProperty('maxHeight', maxHeight));
-    properties.add(DoubleProperty('maxWidth', maxWidth));
-    properties.add(DiagnosticsProperty<BorderRadiusGeometry>(
-        'imageBorderRadius', imageBorderRadius));
-    properties
-        .add(ColorProperty('imagePlaceholderColor', imagePlaceholderColor));
-    properties.add(DoubleProperty('faviconSize', faviconSize));
-    properties.add(DoubleProperty('compactSpacing', compactSpacing));
-    properties.add(DiagnosticsProperty<EdgeInsetsGeometry>(
-        'contentPadding', contentPadding));
-    properties.add(DiagnosticsProperty<ShapeBorder>('cardShape', cardShape));
-    properties.add(FlagProperty('showFavicon',
-        value: showFavicon,
-        ifTrue: 'showFavicon: true',
-        ifFalse: 'showFavicon: false'));
-    properties.add(FlagProperty('showImage',
-        value: showImage,
-        ifTrue: 'showImage: true',
-        ifFalse: 'showImage: false'));
+      ..add(ColorProperty('backgroundColor', backgroundColor))
+      ..add(DiagnosticsProperty<TextStyle>('titleStyle', titleStyle))
+      ..add(
+          DiagnosticsProperty<TextStyle>('descriptionStyle', descriptionStyle))
+      ..add(DiagnosticsProperty<TextStyle>('urlStyle', urlStyle))
+      ..add(DiagnosticsProperty<TextStyle>('siteNameStyle', siteNameStyle))
+      ..add(DiagnosticsProperty<BorderRadiusGeometry>(
+          'borderRadius', borderRadius))
+      ..add(DoubleProperty('elevation', elevation))
+      ..add(DiagnosticsProperty<EdgeInsetsGeometry>('padding', padding))
+      ..add(DoubleProperty('imageHeight', imageHeight))
+      ..add(DoubleProperty('maxHeight', maxHeight))
+      ..add(DoubleProperty('maxWidth', maxWidth))
+      ..add(DiagnosticsProperty<BorderRadiusGeometry>(
+          'imageBorderRadius', imageBorderRadius))
+      ..add(ColorProperty('imagePlaceholderColor', imagePlaceholderColor))
+      ..add(DoubleProperty('faviconSize', faviconSize))
+      ..add(DoubleProperty('compactSpacing', compactSpacing))
+      ..add(DiagnosticsProperty<EdgeInsetsGeometry>(
+          'contentPadding', contentPadding))
+      ..add(DiagnosticsProperty<ShapeBorder>('cardShape', cardShape))
+      ..add(FlagProperty('showFavicon',
+          value: showFavicon,
+          ifTrue: 'showFavicon: true',
+          ifFalse: 'showFavicon: false'))
+      ..add(FlagProperty('showImage',
+          value: showImage,
+          ifTrue: 'showImage: true',
+          ifFalse: 'showImage: false'));
   }
 
   @override

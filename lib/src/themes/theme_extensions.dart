@@ -12,16 +12,21 @@ extension LinkPreviewThemeExtension on BuildContext {
   Color get linkPreviewBackground =>
       linkPreviewTheme.backgroundColor ?? Theme.of(this).colorScheme.surface;
 
+  /// title style for the link preview widget.
   TextStyle? get linkPreviewTitleStyle => linkPreviewTheme.titleStyle;
 
+  /// description style for the link preview widget.
   TextStyle? get linkPreviewDescriptionStyle =>
       linkPreviewTheme.descriptionStyle;
 
+  /// url style for the link preview widget.
   TextStyle? get linkPreviewUrlStyle => linkPreviewTheme.urlStyle;
 
+  /// border radius to be applied for the link preview widget.
   BorderRadiusGeometry get linkPreviewBorderRadius =>
       linkPreviewTheme.borderRadius ?? BorderRadius.circular(12.0);
 
+  /// elevation to be applied for the link preview widget.
   double get linkPreviewElevation => linkPreviewTheme.elevation ?? 0.0;
 }
 

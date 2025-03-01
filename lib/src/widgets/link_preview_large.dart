@@ -1,18 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_helper_utils/flutter_helper_utils.dart';
+import 'package:metalink_flutter/metalink_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import '../models/link_preview_data.dart';
-import '../themes/link_preview_theme.dart';
-import 'favicon_widget.dart';
-import 'image_preview.dart';
 
 /// A large link preview widget with prominent image and detailed content
 class LinkPreviewLarge extends StatelessWidget {
   /// Creates a [LinkPreviewLarge] with the given data.
   const LinkPreviewLarge({
-    super.key,
     required this.data,
+    super.key,
     this.titleMaxLines = 2,
     this.descriptionMaxLines = 4,
     this.showImage = true,
@@ -22,7 +18,7 @@ class LinkPreviewLarge extends StatelessWidget {
   });
 
   /// The data to display in the preview
-  final LinkPreviewData data;
+  final LinkMetadata data;
 
   /// Maximum number of lines for the title
   final int titleMaxLines;
@@ -37,7 +33,7 @@ class LinkPreviewLarge extends StatelessWidget {
   final bool showFavicon;
 
   /// Callback when the preview is tapped
-  final VoidCallback? onTap;
+  final LinkPreviewTapCallBack? onTap;
 
   /// Whether to handle navigation when tapped
   final bool handleNavigation;
@@ -61,7 +57,11 @@ class LinkPreviewLarge extends StatelessWidget {
       color: themeData.backgroundColor ?? colorScheme.surface,
       margin: EdgeInsets.zero,
       child: InkWell(
-        onTap: onTap ?? (handleNavigation ? () => _launchUrl(data.url) : null),
+        onTap: () => onTap != null
+            ? onTap?.call(data)
+            : handleNavigation
+                ? _launchUrl(data.originalUrl)
+                : null,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
@@ -165,7 +165,7 @@ class LinkPreviewLarge extends StatelessWidget {
     );
   }
 
-  void _launchUrl(String url) async {
+  Future<void> _launchUrl(String url) async {
     final uri = Uri.parse(url);
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri);

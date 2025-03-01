@@ -1,19 +1,63 @@
-import 'package:flutter/foundation.dart';
+import 'dart:developer';
 
-import '../models/link_preview_data.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_helper_utils/flutter_helper_utils.dart';
+import 'package:http/http.dart' as http;
+import 'package:metalink/metalink.dart';
+
 import 'metadata_provider.dart';
 
 /// Controller for managing link preview state and data loading
 class LinkPreviewController extends ChangeNotifier {
-  /// Creates a [LinkPreviewController] with the given provider
-  LinkPreviewController({
+  /// Creates a [LinkPreviewController] with default settings
+  ///
+  /// This creates a non-cached instance that's immediately available
+  factory LinkPreviewController({
     MetadataProvider? provider,
     String? initialUrl,
-  })  : _provider = provider ?? MetadataProvider(),
+    http.Client? client,
+    String? proxyUrl,
+  }) {
+    return LinkPreviewController._(
+      provider: provider ??
+          MetadataProvider.create(
+            client: client,
+            proxyUrl: proxyUrl,
+          ),
+      initialUrl: initialUrl,
+    );
+  }
+
+  /// Creates a [LinkPreviewController] with the given provider
+  LinkPreviewController._({
+    required MetadataProvider provider,
+    String? initialUrl,
+  })  : _provider = provider,
         _url = initialUrl {
     if (initialUrl != null && initialUrl.isNotEmpty) {
       fetchData();
     }
+  }
+
+  /// Creates a [LinkPreviewController] with caching enabled
+  ///
+  /// Since caching requires async initialization, this factory
+  /// returns a Future that completes when the controller is ready
+  static Future<LinkPreviewController> withCache({
+    String? initialUrl,
+    Duration cacheDuration = const Duration(hours: 24),
+    http.Client? client,
+    String? proxyUrl,
+  }) async {
+    final provider = await MetadataProvider.createWithCache(
+      cacheDuration: cacheDuration,
+      client: client,
+      proxyUrl: proxyUrl,
+    );
+    return LinkPreviewController._(
+      provider: provider,
+      initialUrl: initialUrl,
+    );
   }
 
   /// The metadata provider
@@ -29,7 +73,7 @@ class LinkPreviewController extends ChangeNotifier {
   Object? _error;
 
   /// Current preview data
-  LinkPreviewData? _data;
+  LinkMetadata? _data;
 
   /// Gets the current URL
   String? get url => _url;
@@ -41,7 +85,7 @@ class LinkPreviewController extends ChangeNotifier {
   Object? get error => _error;
 
   /// Gets the current preview data
-  LinkPreviewData? get data => _data;
+  LinkMetadata? get data => _data;
 
   /// Returns true if data is available
   bool get hasData => _data != null;
@@ -64,9 +108,7 @@ class LinkPreviewController extends ChangeNotifier {
 
   /// Fetches preview data for the current URL
   Future<void> fetchData({bool forceRefresh = false}) async {
-    if (_url == null || _url!.isEmpty) {
-      return;
-    }
+    if (_url.isEmptyOrNull) return;
 
     _isLoading = true;
     _error = null;
@@ -76,7 +118,8 @@ class LinkPreviewController extends ChangeNotifier {
       _data = await _provider.getMetadata(_url!, forceRefresh: forceRefresh);
       _isLoading = false;
       _error = null;
-    } catch (e) {
+    } catch (e, s) {
+      log('fetchData error', error: e, stackTrace: s);
       _isLoading = false;
       _error = e;
       _data = null;
@@ -94,24 +137,12 @@ class LinkPreviewController extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Analyzes a text to find URLs and extracts the first one
-  static String? extractUrlFromText(String text) {
-    final urlRegex = RegExp(
-      r'(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})',
-      caseSensitive: false,
-    );
+  /// Get the provider instance
+  MetadataProvider get provider => _provider;
 
-    final match = urlRegex.firstMatch(text);
-    return match?.group(0);
-  }
-
-  /// Extracts all URLs from a text
-  static List<String> extractUrlsFromText(String text) {
-    final urlRegex = RegExp(
-      r'(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})',
-      caseSensitive: false,
-    );
-
-    return urlRegex.allMatches(text).map((match) => match.group(0)!).toList();
+  @override
+  void dispose() {
+    _provider.dispose();
+    super.dispose();
   }
 }

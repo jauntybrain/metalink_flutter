@@ -5,8 +5,8 @@ import 'package:flutter_helper_utils/flutter_helper_utils.dart';
 class FaviconWidget extends StatelessWidget {
   /// Creates a [FaviconWidget] with the given URL and size.
   const FaviconWidget({
-    super.key,
     required this.url,
+    super.key,
     this.size = 16.0,
     this.backgroundColor,
     this.borderRadius,

@@ -56,7 +56,10 @@ class LinkPreviewConfig {
   /// Duration to cache the preview data
   final Duration cacheDuration;
 
-  /// Optional proxy URL for fetching metadata
+  /// Optional CORS proxy URL for web platform
+  ///
+  /// This is only used on web platform to bypass CORS restrictions.
+  /// Example: "https://corsproxy.io/?" or "https://cors-anywhere.herokuapp.com/"
   final String? proxyUrl;
 
   /// User agent string to use when fetching metadata
