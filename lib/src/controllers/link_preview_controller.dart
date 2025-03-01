@@ -114,9 +114,4 @@ class LinkPreviewController extends ChangeNotifier {
 
     return urlRegex.allMatches(text).map((match) => match.group(0)!).toList();
   }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
 }

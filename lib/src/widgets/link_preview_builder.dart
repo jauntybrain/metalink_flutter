@@ -153,9 +153,8 @@ class _LinkPreviewBuilderState extends State<LinkPreviewBuilder> {
   }
 
   Widget _buildPreview(LinkPreviewData data) {
-    switch (widget.style) {
-      case LinkPreviewStyle.compact:
-        return LinkPreviewCompact(
+    return switch (widget.style) {
+      LinkPreviewStyle.compact => LinkPreviewCompact(
           data: data,
           titleMaxLines: widget.titleMaxLines,
           descriptionMaxLines: widget.descriptionMaxLines,
@@ -163,9 +162,8 @@ class _LinkPreviewBuilderState extends State<LinkPreviewBuilder> {
           showFavicon: widget.showFavicon,
           onTap: widget.onTap,
           handleNavigation: widget.handleNavigation,
-        );
-      case LinkPreviewStyle.large:
-        return LinkPreviewLarge(
+        ),
+      LinkPreviewStyle.large => LinkPreviewLarge(
           data: data,
           titleMaxLines: widget.titleMaxLines,
           descriptionMaxLines: widget.descriptionMaxLines,
@@ -173,10 +171,8 @@ class _LinkPreviewBuilderState extends State<LinkPreviewBuilder> {
           showFavicon: widget.showFavicon,
           onTap: widget.onTap,
           handleNavigation: widget.handleNavigation,
-        );
-      case LinkPreviewStyle.card:
-      default:
-        return LinkPreviewCard(
+        ),
+      _ => LinkPreviewCard(
           data: data,
           titleMaxLines: widget.titleMaxLines,
           descriptionMaxLines: widget.descriptionMaxLines,
@@ -184,7 +180,7 @@ class _LinkPreviewBuilderState extends State<LinkPreviewBuilder> {
           showFavicon: widget.showFavicon,
           onTap: widget.onTap,
           handleNavigation: widget.handleNavigation,
-        );
-    }
+        ),
+    };
   }
 }

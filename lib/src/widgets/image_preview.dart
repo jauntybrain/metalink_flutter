@@ -53,10 +53,6 @@ class ImagePreview extends StatelessWidget {
         linkPreviewTheme.imageBorderRadius ??
         BorderRadius.circular(8.0);
 
-    final effectivePlaceholderColor = placeholderColor ??
-        linkPreviewTheme.imagePlaceholderColor ??
-        Theme.of(context).colorScheme.surfaceContainerHighest;
-
     // Try to get an optimized image URL if we have metadata
     final optimizedUrl = _getOptimizedImageUrl();
 

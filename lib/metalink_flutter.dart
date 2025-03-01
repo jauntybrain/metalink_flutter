@@ -1,6 +1,5 @@
-// Metalink Flutter - Link Preview Widget Library
-// Flutter UI components for the Metalink metadata extraction package
-
+/// Metalink Flutter - Link Preview Widget Library
+/// Flutter UI components for the Metalink metadata extraction package
 library metalink_flutter;
 
 // Export controllers

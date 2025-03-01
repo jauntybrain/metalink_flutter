@@ -240,92 +240,83 @@ class _UrlInputShowcaseState extends State<UrlInputShowcase> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    final theme = context.themeData;
+    return ListView(
       padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+      children: [
+        Text('URL Detection', style: theme.headlineSmall),
+        const SizedBox(height: 8),
+        Text(
+          'Type or paste text with URLs to automatically detect and preview them.',
+          style: theme.bodySmall,
+        ),
+        const SizedBox(height: 16),
+        TextField(
+          controller: _textController,
+          decoration: InputDecoration(
+            hintText: 'Enter text with URLs...',
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+            suffixIcon: IconButton(
+              icon: const Icon(Icons.search),
+              onPressed: _processText,
+            ),
+          ),
+          maxLines: 3,
+          style: theme.bodySmall,
+          onEditingComplete: _processText,
+        ),
+        TextButton.icon(
+          icon: const Icon(Icons.content_paste),
+          label: const Text('Paste example text'),
+          onPressed: () {
+            _textController.text =
+                'Check out this Flutter site: https://flutter.dev and Material Design: https://material.io';
+            _processText();
+          },
+        ),
+        const Divider(),
+
+        if (_detectedUrl != null) ...[
           const Text(
-            'URL Detection',
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            'First Detected URL:',
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
           ),
           const SizedBox(height: 8),
-          Text(
-            'Type or paste text with URLs to automatically detect and preview them.',
-            style: Theme.of(context).textTheme.bodyLarge,
-          ),
+          Text(_detectedUrl!),
           const SizedBox(height: 16),
-          TextField(
-            controller: _textController,
-            decoration: InputDecoration(
-              hintText: 'Enter text with URLs...',
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              suffixIcon: IconButton(
-                icon: const Icon(Icons.search),
-                onPressed: _processText,
-              ),
-            ),
-            maxLines: 3,
-            onEditingComplete: _processText,
+
+          LinkPreview(
+            url: _detectedUrl!,
+            config: const LinkPreviewConfig(style: LinkPreviewStyle.card),
           ),
-          TextButton.icon(
-            icon: const Icon(Icons.content_paste),
-            label: const Text('Paste example text'),
-            onPressed: () {
-              _textController.text =
-                  'Check out this Flutter site: https://flutter.dev and Material Design: https://material.io';
-              _processText();
-            },
-          ),
-          const Divider(),
-
-          if (_detectedUrl != null) ...[
-            const Text(
-              'First Detected URL:',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-            ),
-            const SizedBox(height: 8),
-            Text(_detectedUrl!),
-            const SizedBox(height: 16),
-
-            LinkPreview(
-              url: _detectedUrl!,
-              config: const LinkPreviewConfig(style: LinkPreviewStyle.card),
-            ),
-          ],
-
-          if (_allUrls.isNotEmpty) ...[
-            const SizedBox(height: 16),
-            const Text(
-              'All Detected URLs:',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-            ),
-            const SizedBox(height: 8),
-            Expanded(
-              child: ListView.separated(
-                itemCount: _allUrls.length,
-                separatorBuilder:
-                    (context, index) => const SizedBox(height: 16),
-                itemBuilder: (context, index) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'URL ${index + 1}: ${_allUrls[index].url}',
-                        style: const TextStyle(fontWeight: FontWeight.w500),
-                      ),
-                      const SizedBox(height: 8),
-                      LinkPreview.compact(url: _allUrls[index].url),
-                    ],
-                  );
-                },
-              ),
-            ),
-          ],
         ],
-      ),
+
+        if (_allUrls.isNotEmpty) ...[
+          const SizedBox(height: 16),
+          Text(
+            'All Detected URLs ${_allUrls.length}:',
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+          ),
+          const SizedBox(height: 8),
+          Column(
+            spacing: 16,
+            children: [
+              for (int index = 0; index < _allUrls.length; index++)
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'URL ${index + 1}: ${_allUrls[index].url}',
+                      style: const TextStyle(fontWeight: FontWeight.w500),
+                    ),
+                    const SizedBox(height: 8),
+                    LinkPreview.compact(url: _allUrls[index].url),
+                  ],
+                ),
+            ],
+          ),
+        ],
+      ],
     );
   }
 }
@@ -671,13 +662,13 @@ class _ControllerShowcaseState extends State<ControllerShowcase> {
                 label: const Text('Load Preview'),
                 onPressed: _loadPreview,
               ),
-              const SizedBox(width: 8),
-              OutlinedButton.icon(
+              const SizedBox(width: 6),
+              TextButton.icon(
                 icon: const Icon(Icons.refresh),
                 label: const Text('Refresh'),
                 onPressed: _refreshPreview,
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: 6),
               TextButton.icon(
                 icon: const Icon(Icons.clear),
                 label: const Text('Clear'),

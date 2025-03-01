@@ -1,7 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
+import 'package:hive_ce_flutter/adapters.dart';
+import 'package:http/http.dart' as http;
 import 'package:metalink/metalink.dart';
+import 'package:path_provider/path_provider.dart';
 
 import '../models/link_preview_data.dart';
 
@@ -18,6 +21,16 @@ class MetadataProvider extends ChangeNotifier {
   factory MetadataProvider({
     Duration cacheDuration = const Duration(hours: 24),
     bool enableCache = true,
+    http.Client? client,
+    Duration timeout = const Duration(seconds: 20),
+    String? userAgent,
+    bool followRedirects = true,
+    bool optimizeUrls = true,
+    int maxRedirects = 5,
+    bool analyzeImages = true,
+    bool extractStructuredData = true,
+    bool extractSocialMetrics = false,
+    bool analyzeContent = false,
   }) {
     // Start with a non-cached instance for immediate use
     final metaLink = MetaLink.create();
@@ -26,8 +39,19 @@ class MetadataProvider extends ChangeNotifier {
 
     // If caching is enabled, initialize a cached version and replace the initial one
     if (enableCache) {
-      MetaLink.createWithCache(cacheDuration: cacheDuration)
-          .then((cachedMetaLink) {
+      _createWithCache(
+        client: client,
+        timeout: timeout,
+        userAgent: userAgent,
+        cacheDuration: cacheDuration,
+        followRedirects: followRedirects,
+        optimizeUrls: optimizeUrls,
+        maxRedirects: maxRedirects,
+        analyzeImages: analyzeImages,
+        extractStructuredData: extractStructuredData,
+        extractSocialMetrics: extractSocialMetrics,
+        analyzeContent: analyzeContent,
+      ).then((cachedMetaLink) {
         provider._replaceMetaLink(cachedMetaLink);
       });
     }
@@ -35,17 +59,39 @@ class MetadataProvider extends ChangeNotifier {
     return provider;
   }
 
-  /// Factory constructor that creates a [MetadataProvider] with a provided MetaLink instance
-  factory MetadataProvider.withMetaLink(MetaLink metaLink) {
-    return MetadataProvider._(metaLink: metaLink);
+  /// Asynchronously creates a [MetadataProvider] with caching enabled
+  static Future<MetaLink> _createWithCache({
+    http.Client? client,
+    Duration timeout = const Duration(seconds: 20),
+    String? userAgent,
+    Duration cacheDuration = const Duration(hours: 24),
+    bool followRedirects = true,
+    bool optimizeUrls = true,
+    int maxRedirects = 5,
+    bool analyzeImages = true,
+    bool extractStructuredData = true,
+    bool extractSocialMetrics = false,
+    bool analyzeContent = false,
+  }) async {
+    final directory = await getApplicationDocumentsDirectory();
+    await Hive.initFlutter(directory.path);
+    return MetaLink.createWithCache(
+      client: client,
+      timeout: timeout,
+      userAgent: userAgent,
+      cacheDuration: cacheDuration,
+      followRedirects: followRedirects,
+      optimizeUrls: optimizeUrls,
+      maxRedirects: maxRedirects,
+      analyzeImages: analyzeImages,
+      extractStructuredData: extractStructuredData,
+      extractSocialMetrics: extractSocialMetrics,
+      analyzeContent: analyzeContent,
+    );
   }
 
-  /// Asynchronously creates a [MetadataProvider] with caching enabled
-  static Future<MetadataProvider> createWithCache({
-    Duration cacheDuration = const Duration(hours: 24),
-  }) async {
-    final metaLink =
-        await MetaLink.createWithCache(cacheDuration: cacheDuration);
+  /// Factory constructor that creates a [MetadataProvider] with a provided MetaLink instance
+  factory MetadataProvider.withMetaLink(MetaLink metaLink) {
     return MetadataProvider._(metaLink: metaLink);
   }
 
