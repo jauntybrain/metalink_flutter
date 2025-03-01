@@ -1,0 +1,42 @@
+name: metalink_flutter
+description: Flutter UI components for link previews using the MetaLink package
+version: 1.0.0
+repository: https://github.com/omar-hanafy/metalink_flutter
+topics:
+  - link preview
+  - link detector
+  - url
+  - link
+  - metadata
+
+environment:
+  sdk: ^3.0.0
+  flutter: ^3.29.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  
+  # Core link extraction
+  metalink: ^1.0.1
+  
+  # Required utilities
+  url_launcher: ^6.3.1
+  equatable: ^2.0.7
+  flutter_helper_utils: ^7.0.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
+
+screenshots:
+  - description: 'Card styles link preview'
+    path: screenshots/1.png
+  - description: 'Multi link detection'
+    path: screenshots/2.png
+  - description: 'Custom styles link preview'
+    path: screenshots/3.png
