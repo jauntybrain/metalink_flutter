@@ -26,9 +26,9 @@
 ## 📸 Screenshots
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/omar-hanafy/metalink_flutter/screenshots/1.png" width="30%" alt="Card Style">
-  <img src="https://raw.githubusercontent.com/omar-hanafy/metalink_flutter/screenshots/2.png" width="30%" alt="Compact Style">
-  <img src="https://raw.githubusercontent.com/omar-hanafy/metalink_flutter/screenshots/3.png" width="30%" alt="Large Style">
+  <img src="https://raw.githubusercontent.com/omar-hanafy/metalink_flutter/refs/heads/main/screenshots/1.png" width="30%" alt="Card Style">
+  <img src="https://raw.githubusercontent.com/omar-hanafy/metalink_flutter/refs/heads/main/screenshots/2.png" width="30%" alt="Compact Style">
+  <img src="https://raw.githubusercontent.com/omar-hanafy/metalink_flutter/refs/heads/main/screenshots/3.png" width="30%" alt="Large Style">
 </p>
 
 ## 🚀 Getting Started
