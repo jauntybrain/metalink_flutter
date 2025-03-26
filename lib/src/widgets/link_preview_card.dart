@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_helper_utils/flutter_helper_utils.dart';
 import 'package:metalink_flutter/metalink_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -52,7 +51,7 @@ class LinkPreviewCard extends StatelessWidget {
       shape: themeData.cardShape ??
           RoundedRectangleBorder(
             borderRadius: borderRadius,
-            side: BorderSide(color: colorScheme.outline.addOpacity(0.2)),
+            side: BorderSide(color: colorScheme.outline.withOpacity(0.2)),
           ),
       clipBehavior: Clip.antiAlias,
       color: themeData.backgroundColor ?? colorScheme.surface,
@@ -75,8 +74,9 @@ class LinkPreviewCard extends StatelessWidget {
                 width: double.infinity,
                 borderRadius: BorderRadius.only(
                   topRight:
-                      borderRadius.resolve(context.directionality).topRight,
-                  topLeft: borderRadius.resolve(context.directionality).topLeft,
+                      borderRadius.resolve(Directionality.of(context)).topRight,
+                  topLeft:
+                      borderRadius.resolve(Directionality.of(context)).topLeft,
                 ),
               ),
             Padding(
@@ -103,7 +103,7 @@ class LinkPreviewCard extends StatelessWidget {
                       data.description!,
                       style: themeData.descriptionStyle ??
                           Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                color: colorScheme.onSurface.addOpacity(0.7),
+                                color: colorScheme.onSurface.withOpacity(0.7),
                               ),
                       maxLines: descriptionMaxLines,
                       overflow: TextOverflow.ellipsis,
@@ -128,7 +128,7 @@ class LinkPreviewCard extends StatelessWidget {
                           style: themeData.siteNameStyle ??
                               Theme.of(context).textTheme.bodySmall?.copyWith(
                                     color:
-                                        colorScheme.onSurface.addOpacity(0.6),
+                                        colorScheme.onSurface.withOpacity(0.6),
                                   ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
